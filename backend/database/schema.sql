@@ -17,11 +17,21 @@ CREATE TABLE IF NOT EXISTS `admins` (
     `username` VARCHAR(50) NOT NULL UNIQUE,
     `email` VARCHAR(100) NOT NULL UNIQUE,
     `password_hash` VARCHAR(255) NOT NULL,
-    `role` ENUM('super_admin', 'admin', 'editor') NOT NULL DEFAULT 'editor',
+    `role` ENUM('super_admin', 'admin', 'user') NOT NULL DEFAULT 'user',
+    `permissions` JSON NULL COMMENT 'Custom permissions for user role',
+    `instructions` TEXT NULL COMMENT 'Admin instructions for this user',
+    `is_active` BOOLEAN DEFAULT TRUE,
+    `created_by` INT NULL COMMENT 'ID of admin who created this user',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `last_login` TIMESTAMP NULL,
     INDEX `idx_username` (`username`),
-    INDEX `idx_email` (`email`)
+    INDEX `idx_email` (`email`),
+    INDEX `idx_role` (`role`),
+    INDEX `idx_is_active` (`is_active`),
+    INDEX `idx_created_by` (`created_by`),
+    FOREIGN KEY (`created_by`) REFERENCES `admins`(`id`) ON DELETE SET NULL,
+    CONSTRAINT `chk_email_domain` CHECK (`email` LIKE '%@eldorethousehunters.co.ke')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -107,12 +117,14 @@ CREATE TABLE IF NOT EXISTS `property_amenities` (
 -- Default Password: Admin@123
 -- IMPORTANT: Change this password immediately after first login!
 
-INSERT INTO `admins` (`username`, `email`, `password_hash`, `role`)
+INSERT INTO `admins` (`username`, `email`, `password_hash`, `role`, `created_by`, `is_active`)
 VALUES (
     'admin',
-    'admin@eldorethouses.com',
+    'admin@eldorethousehunters.co.ke',
     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5eTj3rJmLJqfG',
-    'super_admin'
+    'super_admin',
+    NULL,
+    TRUE
 ) ON DUPLICATE KEY UPDATE `username` = `username`;
 
 
@@ -214,6 +226,23 @@ INSERT INTO `properties` (
     'available'
 ) ON DUPLICATE KEY UPDATE `title` = `title`;
 
+
+-- ============================================
+-- 6. USER PERMISSIONS TABLE
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS `user_permissions` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `permission_key` VARCHAR(100) NOT NULL COMMENT 'e.g., view_all_properties, edit_properties, delete_properties',
+    `permission_value` BOOLEAN DEFAULT FALSE,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `admins`(`id`) ON DELETE CASCADE,
+    UNIQUE KEY `unique_user_permission` (`user_id`, `permission_key`),
+    INDEX `idx_user_id` (`user_id`),
+    INDEX `idx_permission_key` (`permission_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- DATABASE OPTIMIZATION QUERIES

@@ -64,6 +64,23 @@ class Settings(BaseSettings):
     ENABLE_LOGGING: bool = True
     LOG_LEVEL: str = "INFO"
     
+    # Email Configuration (Optional)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 465  # 465 for SSL, 587 for TLS
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_USE_TLS: bool = False  # False for SSL (port 465), True for TLS (port 587)
+    SMTP_USE_SSL: bool = True   # True for SSL (port 465), False for TLS (port 587)
+    SMTP_FROM_EMAIL: str = "noreply@eldorethousehunters.co.ke"
+    SMTP_FROM_NAME: str = "Eldoret House Hunters"
+    
+    # Domain Configuration
+    API_BASE_URL: str = "http://localhost:8000"
+    FRONTEND_URL: str = "http://localhost:3000"
+    
+    # WhatsApp (Optional)
+    WHATSAPP_NUMBER: str = "254745319042"
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

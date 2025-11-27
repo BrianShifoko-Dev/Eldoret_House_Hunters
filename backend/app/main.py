@@ -32,16 +32,19 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("🚀 Starting Eldoret House Hunters API...")
     
-    # Check database connection
-    if not check_db_connection():
-        logger.error("❌ Database connection failed!")
-    else:
-        # Initialize database tables
-        try:
-            init_db()
-            logger.info("✅ Database initialized successfully")
-        except Exception as e:
-            logger.error(f"❌ Database initialization failed: {e}")
+    # Check database connection (non-blocking)
+    try:
+        if check_db_connection():
+            # Initialize database tables
+            try:
+                init_db()
+                logger.info("✅ Database initialized successfully")
+            except Exception as e:
+                logger.error(f"❌ Database initialization failed: {e}")
+        else:
+            logger.warning("⚠️  Database connection failed - API will start but database operations may fail")
+    except Exception as e:
+        logger.warning(f"⚠️  Could not check database connection: {e} - API will start but database operations may fail")
     
     # Ensure upload directory exists
     upload_path = Path(settings.UPLOAD_DIR)

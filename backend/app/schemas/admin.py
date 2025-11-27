@@ -21,7 +21,7 @@ class AdminCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, description="Admin username")
     email: EmailStr = Field(..., description="Admin email address")
     password: str = Field(..., min_length=8, description="Admin password (min 8 characters)")
-    role: AdminRole = Field(AdminRole.EDITOR, description="Admin role")
+    role: AdminRole = Field(AdminRole.USER, description="Admin role")
     
     @field_validator('password')
     def validate_password_strength(cls, v):
