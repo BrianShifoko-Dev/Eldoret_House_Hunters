@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Real Estate Color Palette - Warm & Earthy */
+    --color-primary-brown: #6B4423;
+    --color-secondary-brown: #8B6F47;
+    --color-terracotta: #C86048;
+    --color-sage: #8B9474;
+    --color-cream: #F5F0E8;
+    --color-warm-gray: #4A4A4A;
+    --color-gold-accent: #D4AF37;
+    
+    /* Glassmorphism (Limited Use) */
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    
+    /* Theme Colors */
+    --background: 28 20% 12%;
+    --foreground: 36 20% 96%;
+    --card: 30 15% 18%;
+    --card-foreground: 36 20% 96%;
+    --popover: 30 15% 16%;
+    --popover-foreground: 36 20% 96%;
+    --primary: 30 50% 30%;
+    --primary-foreground: 36 20% 96%;
+    --secondary: 25 40% 40%;
+    --secondary-foreground: 36 20% 96%;
+    --muted: 28 15% 25%;
+    --muted-foreground: 36 10% 60%;
+    --accent: 8 45% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 36 20% 96%;
+    --border: 30 15% 25%;
+    --input: 30 15% 25%;
+    --ring: 30 50% 40%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    /* Warm gradient background */
+    background: linear-gradient(135deg, 
+      #1a140f 0%, 
+      #2d1f16 25%, 
+      #1a140f 50%, 
+      #2d1f16 75%, 
+      #1a140f 100%
+    );
+    @apply text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(ellipse at top, rgba(139, 111, 71, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(107, 68, 35, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  h1 {
+    @apply text-5xl font-bold tracking-tight;
+  }
+  
+  h2 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+  
+  h3 {
+    @apply text-3xl font-semibold tracking-tight;
+  }
+  
+  h4 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+  
+  h5 {
+    @apply text-xl font-semibold;
+  }
+  
+  h6 {
+    @apply text-lg font-semibold;
+  }
+  
+  p {
+    @apply text-base leading-7;
+  }
+}
+
+/* Limited Glassmorphism - Only for Hero Search & Special Elements */
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  
+  .glass-light {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: var(--glass-shadow);
+  }
+}
